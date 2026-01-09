@@ -1,9 +1,9 @@
 {
-  "name": "@metano/quasar",
+  "name": "@quasar_rest_auth",
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.192",
+  "version": "1.0.1",
   "description": "Para cabesalho do quasar framework",
   "keywords": [
     "mytech",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/metanochava/quasar.git"
+    "url": "https://github.com/metanochava/quasar_rest_auth.git"
   },
   "license": "MIT",
   "author": "Dias Metano Salvador Chavana",
