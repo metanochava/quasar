@@ -1,6 +1,5 @@
 up:
 	npm version patch --no-git-tag-version; \
-	git status; \
 	git add .; \
 	VERSION=$$(node -p "require('./package.json').version"); \
 	read -p "Mensagem do release: " m; \
