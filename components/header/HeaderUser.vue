@@ -1,0 +1,210 @@
+
+<template>
+  <div>
+    <q-dialog
+        v-model="showRegistarEntidade"
+        persistent
+        :maximized="maximizedToggle"
+        full-height
+      >
+      <RegistarEntidade />
+    </q-dialog>
+    <q-dialog v-model="pergunta" persistent class="row">
+        <q-card style="width: 400px;" flat>
+
+          <q-card-section class="row ">
+            <label class="text-h6 text-grey-9 text-center">
+              {{tdc('De qual deseja sair')}}
+            </label>
+          </q-card-section>
+          <q-separator />
+
+          <q-card-actions class="row" >
+            <q-btn flat   class="col-12" color="primary"  @click="pergunta = false, User.logout(User.Entidade?.id)" > {{tdc(User.Entidade?.nome)}}</q-btn>
+          </q-card-actions>
+
+          <q-card-actions class="row" >
+            <q-btn flat   class="col-12" color="primary"  @click="pergunta = false, User.logout('x')" > {{tdc(User?.TipoEntidade?.nome)}}</q-btn>
+          </q-card-actions>
+          <q-separator/>
+          <q-card-actions class="row" >
+            <q-btn  class="col-12" flat v-close-popup>{{tdc('Cancelar')}}</q-btn>
+          </q-card-actions>
+        </q-card>
+
+    </q-dialog>
+
+    <q-btn round flat>
+      <q-avatar class="" size="45px" :class="$q.dark.isActive ? 'bg-white' : 'bg-white'" >
+        <img  :src="User?.perfil" >
+        <q-card-actions align="center" v-if="User" flat>
+          <div class="text-h6 text-gry-8 row text-center">{{User?.username}}</div>
+        </q-card-actions>
+        <q-separator />
+        <q-menu flat  square  fit :offset="[130, 5]"  >
+          <q-card class="my-card"  style="width:270px;"  flat bordered square  >
+            <q-card-actions class="text-center row" v-if="User">
+              <div class=" col-12">
+                <q-avatar class="" size="120px"  >
+                  <img   :src="User?.perfil" >
+                </q-avatar>
+              </div>
+              <div class=" text-center col-12 text-grey-9 text-h6">
+                {{User?.username}}
+              </div>
+            </q-card-actions>
+            <q-separator  v-if="User" />
+            <q-expansion-item
+                v-if="User.data"
+                dense
+                group="group"
+                :label="User?.Entidade?.nome || tdc('Entidade') "
+                header-class=" text-grey-9"
+                v-model="entidadeClosed"
+              >
+                <q-separator />
+                <q-item dense clickable v-if="User.TipoEntidade?.crair_entidade"   :to="{name:'add_entidade_self', params:{}}"  >
+                  <q-item-section>
+                    <center><q-item-label overline class="text-blue"> {{ tdc('Registar Entidade')}}</q-item-label> </center>
+                  </q-item-section>
+                </q-item>
+                <q-item dense clickable v-for="entidade in User?.Entidades" :key="entidade?.id" @click=" entidadeClosed = false, sucursalClosed = true, User.selectEntidade(entidade)">
+                  <q-item-section>
+                    <center><q-item-label overline> {{ tdc((entidade?.nome))}}</q-item-label> </center>
+                  </q-item-section>
+                </q-item>
+              </q-expansion-item>
+
+              <q-expansion-item
+                v-if="User.data"
+                dense
+                group="group"
+                :label="User?.Sucursal?.nome || tdc('Sucursal') "
+                header-class=" text-grey-9"
+                v-model="sucursalClosed"
+              >
+                <q-separator />
+                <q-item dense clickable v-for="sucursal in User?.Sucursals" :key="sucursal?.id"   @click=" sucursalClosed = false, User.selectSucursal(sucursal)">
+                  <q-item-section>
+                    <center><q-item-label overline> {{ tdc(sucursal?.nome)}}</q-item-label> </center>
+                  </q-item-section>
+                </q-item>
+              </q-expansion-item>
+
+            <q-btn dense  flat  size="" @click="sucursalClosed = false" color="grey" :label="tdc(User.perfilSplint(User.Grupo?.name)) " style="width: 100%; border-color: transparent;">
+              <q-menu fit>
+                <q-list dense   class="rounded-borders" style="min-width: 100px" >
+                  <q-item clickable v-close-popup  @click="User.selectGrupo({id:'1', name:'Hóspede'})"  >
+                    <q-item-section>
+                      <q-item-label overline> {{tdc('Hóspede')}}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item clickable v-close-popup @click="User.selectGrupo(grupo)" v-ripple v-for=" grupo in User.Grupos" :key="grupo.id">
+                    <q-item-section>
+                      <q-item-label overline> {{ tdc(User.perfilSplint(grupo.name))}}</q-item-label>
+
+                    </q-item-section>
+
+                  </q-item>
+
+                </q-list>
+              </q-menu>
+            </q-btn>
+            <q-card-actions align="around" v-if="User.data">
+              <q-btn  icon="settings" dense size=""  :to="{name:'userDetails', params:{'user_id': User?.id}}" flat color="secondary" class="">{{tdc('Definições')}}</q-btn>
+              <q-btn  icon="logout" dense size="" flat color="red" @click="pergunta = !pergunta">{{tdc('Sair')}}</q-btn>
+            </q-card-actions>
+
+            <q-card-actions align="around" v-else>
+              <q-btn  icon="person_add" dense size="" :to="{name:'registarUser'}" flat color="primary" class="" :label="tdc('Registar')" />
+              <q-btn  icon="login" dense size="" :to="{name:'login'}" flat color="secondary" class="" >{{tdc('login')}}</q-btn>
+            </q-card-actions>
+            <q-separator color="primary" dense size="xs" />
+          </q-card>
+
+        </q-menu>
+      </q-avatar>
+      <q-tooltip :class="$q.dark.isActive ? 'bg-transparent' : 'bg-primary'" v-if="User">{{User?.username }} </q-tooltip>
+      <q-tooltip :class="$q.dark.isActive ? 'bg-transparent' : 'bg-primary'" v-else>{{tdc('Hóspede')}}</q-tooltip>
+    </q-btn>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from 'vue'
+import { tdc } from '../../boot/app'
+import { getStorage } from '../../boot/base'
+import { UserStore } from '../../stores/AuthStore'
+import RegistarEntidade from './RegistarEntidade.vue'
+
+export default defineComponent({
+  name: 'HeaderUser',
+  components: { RegistarEntidade },
+
+  setup () {
+    const User = UserStore()
+    return { User, tdc }
+  },
+
+  data () {
+    return {
+      sucursalClosed: false,
+      entidadeClosed: false,
+      pergunta: false,
+      showRegistarEntidade: false,
+    }
+  },
+
+  watch: {
+    'User.Grupo' (val) {
+      if (!val) return
+      if (this.$route.name !== 'wellcome') {
+        this.$router.push({ name: 'home' })
+      }
+    },
+
+    'User.isLogout' (val) {
+      if (!val) return
+      if (this.User.Entidade){
+        this.$router.push({ name: 'login' , query: { entidade: this.User.Entidade.id}})
+      }
+      this.$router.push({ name: 'login' })
+    }
+  },
+
+  methods: {
+    startSessionWatcher () {
+      this._sessionInterval = setInterval(this.User.checkSession, 1 * 60 * 1000)
+    }
+  },
+  beforeUnmount () {
+
+  },
+
+  async mounted () {
+
+    this.sucursalClosed = false
+
+    /* ---------- LEITURA SEGURA ---------- */
+    this.User.Entidade = this.User.safeParse(getStorage('c', 'userEntidade'))
+    this.User.Sucursals = this.User.safeParse(getStorage('c', 'userSucursals'))
+    this.User.Entidades = this.User.safeParse(getStorage('c', 'userEntidades'))
+    this.User.Sucursal = this.User.safeParse(getStorage('c', 'userSucursal'))
+    this.User.Grupo   = this.User.safeParse(getStorage('c', 'userGrupo'))
+    this.User.Grupos   = this.User.safeParse(getStorage('c', 'userGrupos'))
+    this.User.Permicoes = this.User.safeParse(getStorage('l', 'userPermicoes'))
+
+    this.User.data   = this.User.safeParse(getStorage('c', 'user'))
+    this.User.access   = getStorage('c', 'access')
+    this.User.refresh   = getStorage('c', 'refresh')
+
+    this.User.RightTop   = ('' + getStorage('c', 'right_top')).toLowerCase() === 'true'
+    this.User.LeftTop   = ('' + getStorage('c', 'left_top')).toLowerCase() === 'true'
+    
+    await this.User.getEntidades()
+
+    this.startSessionWatcher()
+  }
+})
+</script>

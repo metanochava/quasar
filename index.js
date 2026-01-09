@@ -3,6 +3,7 @@ export * from './stores/settings.js'
 export * from './boot/axios.js'
 
 
-import MyHeader from './components/MyHeader.vue'
-export { MyHeader }
+import MainLayout from './layouts/MainLayout.vue'
+import AuthLayout from './layouts/AuthLayout.vue'
+export { MainLayout, AuthLayout}
 

@@ -1,13 +1,8 @@
 import { traducao } from './base'
 import { dateSplit } from './data'
-import { config } from './conf'
-import { useStore } from 'vuex'
 
 let result = false
-export const appName = config.appName
-export const appLogo = config.appLogo
-export const entidadeName = config.entidadeName
-export const entidadeLogo = config.entidadeLogo
+
 export const api = 'api'
 export const thumbStyle = {
   right: '5px',
@@ -54,21 +49,21 @@ export const pegaDominio = function () {
 }
 
 export const MeIsAuthorized = function (permissions, permission) {
-  const store = useStore()
+  // const store = useStore()
   let result = false
   if (Array.isArray(permissions)) {
     permissions.forEach(element => {
       if (element.nome === permission) {
         result = true
       } else {
-        store?.commit('auth/SET_PAGEPERMISSOES', permission)
+        // store?.commit('auth/SET_PAGEPERMISSOES', permission)
       }
     })
   }
   return result
 }
 
-export const td = traducao
+export const tdc = traducao
 export const ds = dateSplit
 
 // Initialize the annoying-background directive.
@@ -103,7 +98,6 @@ export const urlBase = (url = '') => {
     }
   }
 }
-
 
 
 

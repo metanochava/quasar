@@ -1,6 +1,6 @@
 import { getStorage, setStorage } from './storage'
 
-import { apiUrl } from './axios'
+import { url } from './api'
 
 export const getHostname = (tipoEnt) => {
   const domain = window.location.href.split('/')[2].split('.')[0]
@@ -16,7 +16,7 @@ export const getHostname = (tipoEnt) => {
 
 export const getTipoEntidades = async () => {
   try {
-    const response = await fetch(apiUrl({ type: 'banu', url: 'tipoEntidades/', params: { } }), {
+    const response = await fetch(url({ type: 'nu', url: 'tipoEntidades/', params: { } }), {
       method: 'GET'
     }).then(response => {
       this.$store.commit('tipoEntidade/SET_TIPO_ENTIDADES', response?.data?.results)
@@ -32,7 +32,7 @@ export const getTipoEntidades = async () => {
 
 export const getEntidade = async (id) => {
   try {
-    const response = await fetch(apiUrl({ type: 'banu', url: 'entidades/' + id, params: { } }), {
+    const response = await fetch(url({ type: 'banu', url: 'entidades/' + id, params: { } }), {
       method: 'GET'
     }).then(response => {
       this.$store.commit('entidade/SET_ENTIDADE', response?.data)

@@ -1,40 +1,5 @@
 
 let result = false
-export const chavesenhacredencial = '@p0r@'
-
-export const encrypt = (data, _secret = chavesenhacredencial) => {
-  const CryptoJS = require('crypto-js')
-
-  // Encrypt
-  const ciphertext = CryptoJS.AES.encrypt(data, chavesenhacredencial).toString()
-  return ciphertext
-}
-
-export const decrypt = (data, _secret = chavesenhacredencial) => {
-  const CryptoJS = require('crypto-js')
-  if (data != null && data !== 'null' && data !== '') {
-    const bytes = CryptoJS.AES.decrypt(data, chavesenhacredencial)
-    const originalText = bytes.toString(CryptoJS.enc.Utf8)
-    return originalText
-  }
-  return null
-}
-export const encryptKey = (data, _secret = chavesenhacredencial) => {
-  const CryptoJS = require('crypto-js')
-  const ciphertext = CryptoJS.AES.encrypt(data, chavesenhacredencial).toString()
-  return ciphertext
-}
-
-export const decryptKey = (data, _secret = chavesenhacredencial) => {
-  let retorno = null
-  Object.keys(localStorage).forEach(function (key) {
-    if (data === decrypt(key)) {
-      retorno = key
-    }
-  })
-  return retorno
-}
-
 export const localStorageSetItem = (key, value) => {
   Object.keys(localStorage).forEach(function (keyLocal) {
     if (key === decrypt(keyLocal)) {
@@ -44,12 +9,11 @@ export const localStorageSetItem = (key, value) => {
   localStorage.setItem(encrypt(key), (value))
 }
 
-// Initialize the annoying-background directive.
+
 export const IsAuthorized = {
   bind (el, binding, vnode) {
     const store = vnode.context.$store
     const permissions = store.getters['auth/getPermissions']
-    // console.log(binding.value)
 
     permissions.forEach(element => {
       if (element.nome === binding.value) {
@@ -95,7 +59,7 @@ export const traducao = function (texto = '') {
       }
     }
   } catch (error) {
-    // console.warn('traducao.js = > linha 98' + error.message)
+
   }
   if (returne === '') {
     returne = texto
@@ -259,6 +223,18 @@ export const getStorage = (_type, _cname, _help = 0) => {
     } else {
       result = getCookie(_cname, _help)
     }
+  }
+  return result
+}
+
+export const deleteStorage = (_type, _cname) => {
+  let result = null
+  if (_type === 'l') {
+    result = localStorage.removeItem(_cname)
+  }
+
+  if (_type === 'c') {
+    setCookie(_cname, null, 0)
   }
   return result
 }
