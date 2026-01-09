@@ -5,4 +5,4 @@ up:
 	VERSION=$$(node -p "require('./package.json').version"); \
 	read -p "Mensagem do release: " m; \
 	git commit -m "release: v$$VERSION - $$m"; \
-	npm publish --access public
+	npm publish
